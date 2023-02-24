@@ -1,0 +1,9 @@
+https://stackoverflow.com/questions/70437632/how-can-i-animate-a-matplotlib-plot-from-within-for-loop
+
+https://stackoverflow.com/questions/65415408/update-marker-shape-of-a-scatter-plot/65422142#65422142
+
+https://stackoverflow.com/questions/65890187/how-to-change-dot-types-in-python-prince?noredirect=1&lq=1
+
+https://stackoverflow.com/questions/65415408/update-marker-shape-of-a-scatter-plot
+
+https://github.com/Mahrooo/Robot-Mapping-SLAM-Python-solutions
