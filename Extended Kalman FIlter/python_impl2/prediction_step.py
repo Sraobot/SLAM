@@ -12,16 +12,19 @@ def prediction_step(mu, sigma, u, N):
     rot1 = u[1];    trans = u[2];   rot2 = u[3]
     last_theta = mu[2]
     # print(f"u:{u}")
-    update = np.array([[trans*np.cos(normalise_angle(mu[2]+rot1))], 
-                       [trans*np.sin(normalise_angle(mu[2] + rot1))], 
-                       [normalise_angle(rot1+rot2)]],dtype=float)
+    update = np.array([[trans*np.cos(mu[2]+rot1)], 
+                       [trans*np.sin(mu[2] + rot1)], 
+                       [rot1+rot2]],dtype=np.float64)
     
     mu[:3] = mu[:3] + update
     # Normalising the angle
     mu[2] = normalise_angle(mu[2])
-
+    # print("mu:",mu[:3])
     F_x = np.concatenate((np.eye(3), np.zeros((3, 2*N))),axis=1)
-    low_G_x_t = np.eye(3) + np.array([[0, 0, -trans*np.sin(last_theta+rot1)], # See this
+    # low_G_x_t = np.eye(3) + np.array([[0, 0, -trans*np.sin(last_theta+rot1)], # See this
+    #                                   [0, 0, trans*np.cos(last_theta+rot1)],
+    #                                   [0, 0, 0]],dtype=float)
+    low_G_x_t = np.array([[0, 0, -trans*np.sin(last_theta+rot1)], # See this
                                       [0, 0, trans*np.cos(last_theta+rot1)],
                                       [0, 0, 0]],dtype=float)
     G_t = np.eye(3+2*N) + F_x.T@low_G_x_t@F_x

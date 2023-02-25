@@ -45,19 +45,19 @@ def correction_step(mu, sigma, z, observedLandmarks):
 
         if(observedLandmarks[landmarkId]== False):
             mu[3 + 2*(landmarkId-1) : 3 + 2*(landmarkId)]  = mu[0:2] + \
-                        np.array([z.iloc[i,2] * np.cos(z.iloc[i,3]+mu[2]), z.iloc[i,2]*np.sin(z.iloc[i,3]+mu[2])])
+                        np.array([z.iloc[i,2]*np.cos(z.iloc[i,3]+mu[2]), z.iloc[i,2]*np.sin(z.iloc[i,3]+mu[2])])
             observedLandmarks[landmarkId] = 1
         
         Z[2*i: 2*(i+1)] = np.array([[z.iloc[i,2]],
                                     [z.iloc[i,3]]],dtype=float)
         
-        delta = mu[3+2*(landmarkId-1):3+2*landmarkId] - mu[0:2]
+        delta[0] = mu[3+2*(landmarkId-1)] - mu[0]
+        delta[1] = mu[3+2*(landmarkId-1)+1] - mu[1]
         q = np.squeeze(delta.T@delta)
         
         expectedZ[2*i: 2*(i+1)] = np.array([[np.sqrt(q)],
                                             [normalise_angle(np.arctan2(delta[1], delta[0]) - mu[2])]],dtype=float)
         
-
         Fxj_part2 = np.zeros((5, 2*N))
         Fxj_part2[3:5, 2*(landmarkId-1):2*(landmarkId-1)+2] = np.eye(2)
         Fxj = np.concatenate((Fxj_part1, Fxj_part2), axis=1)
@@ -68,7 +68,8 @@ def correction_step(mu, sigma, z, observedLandmarks):
     K = sigma@H.T@np.linalg.inv(H@sigma@H.T + Q)
 
     difference = normalise_bearings(np.subtract(Z, expectedZ))
-
+    # print("difference")
+    # print(difference.T)
     mu = mu + K@difference
     sigma = (np.eye(2*N +3)-K@H)@sigma
 

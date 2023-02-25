@@ -1,4 +1,3 @@
-from matplotlib import pyplot as plt
 import numpy as np
 from scipy.stats.distributions import chi2
 
@@ -18,11 +17,15 @@ def drawellipse(x,a,b,colour):
     p[1,:] = b*np.sin(vec)
     
     # Translate and rotate
-    xo = np.squeeze(x[0]); yo = np.squeeze(x[1]); angle = np.squeeze(x[2])
+    xo = np.squeeze(x[0])
+    yo = np.squeeze(x[1]) 
+    angle = np.squeeze(x[2])
+
     # print(f"angle:{angle}")
     # Earlier R was np.matrix, it did not plot. 
     R = np.zeros((2,2))
-    R  = np.array([[np.cos(angle), -np.sin(angle)], [np.sin(angle), np.cos(angle)]])
+    R  = np.array([[np.cos(angle), -np.sin(angle)], 
+                   [np.sin(angle), np.cos(angle)]])
 
     T = np.zeros((2,1))
     T = np.array([[xo], [yo]], dtype='float')
@@ -40,7 +43,7 @@ def drawprobellipse(x,C,alpha,colour):
     a = np.sqrt(0.5*(sxx+syy+np.sqrt((sxx-syy)**2+4*sxy**2)))   # always greater
     # c = 0.5*(sxx+syy-np.sqrt((sxx-syy)**2+4*sxy**2))
     # print("c in ellipse:",c)
-    b = np.sqrt(0.5*(sxx+syy-np.sqrt((sxx-syy)**2+4*sxy**2)))   # always smaller
+    b = np.sqrt(0.5*(sxx+syy-np.sqrt((sxx-syy)**2+4*(sxy**2))))   # always smaller
 
     # Remove imaginary parts in case of neg. definite C
     if not np.isreal(a): 
@@ -54,7 +57,9 @@ def drawprobellipse(x,C,alpha,colour):
 
     # Look where the greater half axis belongs to
     if sxx < syy:
-        swap = a; a = b; b = swap
+        swap = a
+        a = b
+        b = swap
     
     angle = 0
 
